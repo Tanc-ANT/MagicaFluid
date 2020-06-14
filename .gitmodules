@@ -1,0 +1,10 @@
+[submodule "Dependencise/glm"]
+	path = Dependencise/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "Dependencise/stb"]
+	path = Dependencise/stb
+	url = https://github.com/nothings/stb.git
+[submodule "Dependencise/imgui-docking"]
+	path = Dependencise/imgui-docking
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
