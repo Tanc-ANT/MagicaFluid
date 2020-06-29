@@ -17,5 +17,5 @@ public:
 
 	// SPH algorithm need tiny time interval.
 	// PICSPH can have big time interval.
-	double timeIntervalInSeconds = 0.001;
+	double timeIntervalInSeconds = 0.003;
 };

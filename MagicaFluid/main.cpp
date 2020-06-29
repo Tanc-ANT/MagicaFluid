@@ -14,9 +14,9 @@
 
 #include "PhysicsAnimation.h"
 #include "SphSystemData.h"
-#include "SphSolver.h"
+#include "PciSphSolver.h"
 
-SphSolver* solver;
+PciSphSolver* solver;
 
 Timer *timer;
 char *title;
@@ -46,7 +46,7 @@ void set_shaders()
 
 void init_sph_system()
 {
-	solver = new SphSolver();
+	solver = new PciSphSolver();
 	solver->initialize();
 
 	timer=new Timer();

@@ -28,6 +28,7 @@ protected:
 	virtual void onEndAdvanceTimeStep(double timeStepInSeconds);
 
 	void resolveCollision();
+	void resolveCollision(VectorArray& newPositions,VectorArray& newVelocities);
 
 private:
 	bool _systemRun = false;

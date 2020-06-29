@@ -126,41 +126,46 @@ void ParticleSystemSolver::timeIntegration(double timeIntervalInSeconds)
 
 void ParticleSystemSolver::resolveCollision()
 {
+	resolveCollision(_newPositions, _newVelocities);
+}
+
+void ParticleSystemSolver::resolveCollision(VectorArray& newPositions, VectorArray& newVelocities)
+{
 	for (int i = 0; i < _particleSystemData->numberOfParticles(); ++i)
 	{
-		if (_newPositions[i].x >= _wordSize.x - kBoundary)
+		if (newPositions[i].x >= _wordSize.x - kBoundary)
 		{
-			_newVelocities[i].x = _newVelocities[i].x * _wallDamping;
-			_newPositions[i].x = _wordSize.x - kBoundary;
+			newVelocities[i].x = newVelocities[i].x * _wallDamping;
+			newPositions[i].x = _wordSize.x - kBoundary;
 		}
 
-		if (_newPositions[i].x < 0.0f)
+		if (newPositions[i].x < 0.0f)
 		{
-			_newVelocities[i].x = _newVelocities[i].x * _wallDamping;
-			_newPositions[i].x = 0.0f;
+			newVelocities[i].x = newVelocities[i].x * _wallDamping;
+			newPositions[i].x = 0.0f;
 		}
 
-		if (_newPositions[i].y >= _wordSize.y - kBoundary)
+		if (newPositions[i].y >= _wordSize.y - kBoundary)
 		{
-			_newVelocities[i].y = _newVelocities[i].y * _wallDamping;
-			_newPositions[i].y = _wordSize.y - kBoundary;
+			newVelocities[i].y = newVelocities[i].y * _wallDamping;
+			newPositions[i].y = _wordSize.y - kBoundary;
 		}
 
-		if (_newPositions[i].y < 0.0f)
+		if (newPositions[i].y < 0.0f)
 		{
-			_newVelocities[i].y = _newVelocities[i].y * _wallDamping;
-			_newPositions[i].y = 0.0f;
+			newVelocities[i].y = newVelocities[i].y * _wallDamping;
+			newPositions[i].y = 0.0f;
 		}
 
-		if (_newPositions[i].z >= _wordSize.z - kBoundary)
+		if (newPositions[i].z >= _wordSize.z - kBoundary)
 		{
-			_newVelocities[i].z = _newVelocities[i].z * _wallDamping;
-			_newPositions[i].z = _wordSize.z - kBoundary;
+			newVelocities[i].z = newVelocities[i].z * _wallDamping;
+			newPositions[i].z = _wordSize.z - kBoundary;
 		}
 
-		if (_newPositions[i].z < 0.0f)
+		if (newPositions[i].z < 0.0f)
 		{
-			_newVelocities[i].z = _newVelocities[i].z * _wallDamping;
+			newVelocities[i].z = newVelocities[i].z * _wallDamping;
 			_newPositions[i].z = 0.0f;
 		}
 	}
