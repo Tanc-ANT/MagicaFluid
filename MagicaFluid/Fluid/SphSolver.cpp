@@ -1,6 +1,6 @@
 #include "SphSolver.h"
 
-SphSolver::SphSolver() 
+SphSolver::SphSolver()
 {
 	setParticleSystemData(std::make_shared<SphSystemData>());
 
@@ -152,7 +152,7 @@ void SphSolver::computePressure() {
 	// http://cg.informatik.uni-freiburg.de/publications/2007_SCA_SPH.pdf
 	const double targetDensity = particles->targetDensity();
 	const double eosScale
-		= targetDensity * std::pow(_speedOfSound,2) / _eosExponent;
+		= targetDensity * std::pow(_speedOfSound, 2) / _eosExponent;
 
 	for (int i = 0; i < numberOfParticles; ++i)
 	{
@@ -194,7 +194,7 @@ void SphSolver::accumulatePressureForce(
 	auto particles = sphSystemData();
 	size_t numberOfParticles = particles->numberOfParticles();
 
-	const double massSquared = std::pow(particles->mass(),2);
+	const double massSquared = std::pow(particles->mass(), 2);
 	const SphSpikyKernel kernel(particles->kernelRadius());
 
 	for (int i = 0; i < numberOfParticles; ++i)
@@ -229,7 +229,7 @@ void SphSolver::accumulateViscosityForce()
 	auto& f = particles->forces();
 
 	const double massSquared = std::pow(particles->mass(), 2);
-	const SphSpikyKernel kernel(particles->kernelRadius());
+	const SphViscosityKernel kernel(particles->kernelRadius());
 
 	for (int i = 0; i < numberOfParticles; ++i)
 	{
@@ -253,12 +253,12 @@ void SphSolver::computePseudoViscosity(double timeStepInSeconds)
 {
 	auto particles = sphSystemData();
 	size_t numberOfParticles = particles->numberOfParticles();
-	auto x = particles->positions();
-	auto v = particles->velocities();
-	auto d = particles->densities();
+	const auto& x = particles->positions();
+	auto& v = particles->velocities();
+	const auto& d = particles->densities();
 
 	const double mass = particles->mass();
-	const SphSpikyKernel kernel(particles->kernelRadius());
+	const SphStdKernel kernel(particles->kernelRadius());
 
 	VectorArray smoothedVelocities(numberOfParticles);
 
