@@ -1,4 +1,8 @@
 #include "SphSolver.h"
+#include "glm/glm.hpp"
+
+static double kTimeStepLimitBySpeedFactor = 0.4;
+static double kTimeStepLimitByForceFactor = 0.25;
 
 SphSolver::SphSolver()
 {
@@ -92,6 +96,36 @@ void SphSolver::setTimeStepLimitScale(double newScale)
 SphSystemDataPtr SphSolver::sphSystemData() const
 {
 	return std::dynamic_pointer_cast<SphSystemData>(particleSystemData());
+}
+
+unsigned int SphSolver::numberOfSubTimeSteps(double timeIntervalInSeconds) const
+{
+	auto particles = sphSystemData();
+	size_t numberOfParticles = particles->numberOfParticles();
+	auto& f = particles->forces();
+
+	const double kernelRadius = particles->kernelRadius();
+	const double mass = particles->mass();
+
+	double maxForceMagnitude = 0.0;
+
+	for (size_t i = 0; i < numberOfParticles; ++i)
+	{
+		maxForceMagnitude = std::max(maxForceMagnitude, glm::length(f[i]));
+	}
+
+	double timeStepLimitBySpeed
+		= kTimeStepLimitBySpeedFactor * kernelRadius / _speedOfSound;
+	double timeStepLimitByForce
+		= kTimeStepLimitByForceFactor
+		* std::sqrt(kernelRadius * mass / maxForceMagnitude);
+
+	double desiredTimeStep
+		= _timeStepLimitScale
+		* std::min(timeStepLimitBySpeed, timeStepLimitByForce);
+
+	return static_cast<unsigned int>(
+		std::ceil(timeIntervalInSeconds / desiredTimeStep));
 }
 
 void SphSolver::accumulateForces(double timeStepInSeconds)
@@ -202,12 +236,8 @@ void SphSolver::accumulatePressureForce(
 		const auto& neighbors = particles->neighborLists()[i];
 		for (size_t j : neighbors)
 		{
-			auto distance = positions[i] - positions[j];
-			double dist = std::sqrt(
-				distance.x * distance.x +
-				distance.y * distance.y +
-				distance.z * distance.z);
-
+			double dist = glm::distance(positions[i], positions[j]);
+			
 			if (dist > 0.0) {
 				Vector3D dir = (positions[j] - positions[i]) / dist;
 				pressureForces[i] -= massSquared
@@ -236,11 +266,7 @@ void SphSolver::accumulateViscosityForce()
 		const auto& neighbors = particles->neighborLists()[i];
 		for (size_t j : neighbors)
 		{
-			auto distance = x[i] - x[j];
-			double dist = std::sqrt(
-				distance.x * distance.x +
-				distance.y * distance.y +
-				distance.z * distance.z);
+			double dist = glm::distance(x[i], x[j]);
 
 			f[i] += viscosityCoefficient() * massSquared
 				* (v[j] - v[i]) / d[j]
@@ -269,11 +295,7 @@ void SphSolver::computePseudoViscosity(double timeStepInSeconds)
 
 		const auto& neighbors = particles->neighborLists()[i];
 		for (size_t j : neighbors) {
-			auto distance = x[i] - x[j];
-			double dist = std::sqrt(
-				distance.x * distance.x +
-				distance.y * distance.y +
-				distance.z * distance.z);
+			double dist = glm::distance(x[i], x[j]);
 
 			double wj = mass / d[j] * kernel(dist);
 			weightSum += wj;

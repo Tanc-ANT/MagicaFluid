@@ -15,5 +15,4 @@ void main()
 	gl_Position = view * vec4(position, 1.0);
 	gsColor = color;
 	gsRadius = radius;
-	gl_PointSize = radius / gl_Position.w;
 }

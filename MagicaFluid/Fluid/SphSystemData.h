@@ -52,7 +52,7 @@ public:
 private:
 	double _targetDensity = kWaterDensity;
 	double _targetSpacing = 0.1;
-	double _kernelRadiusOverTargetSpacing = 1.8;
+	double _kernelRadiusOverTargetSpacing = 1.6;
 	double _kernelRadius;
 
 	std::vector<double> _pressure;

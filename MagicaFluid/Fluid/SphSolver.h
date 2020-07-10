@@ -34,6 +34,8 @@ public:
 
 
 protected:
+	unsigned int numberOfSubTimeSteps(double timeIntervalInSeconds) const override;
+
 	void accumulateForces(double timeStepInSeconds) override;
 
 	void onBeginAdvanceTimeStep(double timeStepInSeconds) override;
@@ -72,5 +74,5 @@ private:
 	double _timeStepLimitScale = 1.0;
 };
 
-typedef std::shared_ptr<SphSolver> SphSolver3Ptr;
+typedef std::shared_ptr<SphSolver> SphSolverPtr;
 

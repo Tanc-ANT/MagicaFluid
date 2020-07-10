@@ -9,6 +9,16 @@ public:
 	Camera() {};
 	~Camera() {};
 
+	glm::mat4 GetProjectionMatrix(float width,float height)
+	{
+		return glm::perspective(glm::radians(fov), width / height, near, far);
+	}
+
+	glm::mat4 GetInverseProjectionMatrix(float width, float height)
+	{
+		return glm::inverse(glm::perspective(glm::radians(fov), width / height, near, far));
+	}
+
 	glm::mat4 GetViewMatrix()
 	{
 		glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -18,6 +28,20 @@ public:
 		return view;
 	}
 
+	glm::vec3 GetPosition()
+	{
+		return glm::vec3(xTrans, yTrans, zTrans);
+	}
+
+	void update()
+	{
+		if (buttonState == 1)
+		{
+			xRot += (xRotLength - xRot) * 0.1f;
+			yRot += (yRotLength - yRot) * 0.1f;
+		}
+	}
+
 public:
 	float xRot = 15.0f;
 	float yRot = 0.0f;
@@ -25,6 +49,8 @@ public:
 	float yTrans = -10.0;
 	float zTrans = -45.0;
 	float fov = 60.0;
+	float near = 0.1;
+	float far = 100.0;
 
 	int ox = 0;
 	int oy = 0;
