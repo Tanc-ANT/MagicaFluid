@@ -8,10 +8,7 @@ workspace "MagicaFluid"
 		"Release"
 	}
 	
-	flags
-	{
-		"MultiProcessorCompile"
-	}
+	multiprocessorcompile "On"
 	
 	location "build"
 
